@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  phoneHash      String?
+  provider       String
+  providerUserId String?
+  status         String   @default("active")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+}
+
+model Order {
+  id                    String   @id @default(cuid())
+  orderNo               String   @unique
+  userId                String
+  productType           String
+  amountCents           Int
+  currency              String   @default("CNY")
+  status                String
+  paymentProvider       String
+  providerTransactionId String?
+  paidAt                DateTime?
+  grantedAt             DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Entitlement {
+  id            String   @id @default(cuid())
+  userId        String
+  type          String
+  remainingUses Int?
+  startsAt      DateTime
+  expiresAt     DateTime?
+  sourceOrderId String?
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model BaziProfile {
+  id                 String   @id @default(cuid())
+  userId             String
+  birthDate          DateTime
+  birthTime          String?
+  birthTimePrecision String
+  birthPlaceCode     String?
+  birthPlaceLabel    String?
+  gender             String
+  timeCorrectionMode String
+  computedChartJson  Json
+  createdAt          DateTime @default(now())
+  deletedAt          DateTime?
+}
+
+model BaziReport {
+  id                 String   @id @default(cuid())
+  profileId          String
+  userId             String
+  focusArea          String
+  reportJson         Json
+  modelName          String
+  promptVersion      String
+  safetyReviewStatus String
+  createdAt          DateTime @default(now())
+  deletedAt          DateTime?
+}
+
+model YijingCast {
+  id                  String   @id @default(cuid())
+  userId              String
+  numbersJson         Json
+  focusArea           String?
+  questionText        String?
+  questionReviewJson  Json?
+  computedHexagramJson Json
+  createdAt           DateTime @default(now())
+  deletedAt           DateTime?
+}
+
+model YijingReport {
+  id                 String   @id @default(cuid())
+  castId             String
+  userId             String
+  reportJson         Json
+  modelName          String
+  promptVersion      String
+  safetyReviewStatus String
+  creditEntitlementId String?
+  createdAt          DateTime @default(now())
+  deletedAt          DateTime?
+}
+
+model AiGeneration {
+  id                 String   @id @default(cuid())
+  userId             String?
+  mode               String
+  requestHash        String
+  inputRedactedJson  Json
+  outputRedactedJson Json?
+  modelName          String
+  promptVersion      String
+  status             String
+  latencyMs          Int?
+  createdAt          DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  eventType  String
+  entityType String
+  entityId   String
+  payloadJson Json
+  createdAt  DateTime @default(now())
+}
