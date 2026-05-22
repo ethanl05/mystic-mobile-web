@@ -9,7 +9,9 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "sync": "bash scripts/collab-sync.sh",
+    "push-code": "bash scripts/collab-push.sh"
   },
   "dependencies": {
     "@prisma/client": "^6.18.0",

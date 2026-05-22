@@ -2,6 +2,15 @@
 
 这个仓库采用双人 GitHub 协作流程：所有开发从 `main` 拉新分支，完成后通过 Pull Request 合并回 `main`。
 
+最常用的两个命令：
+
+```bash
+npm run sync
+npm run push-code -- "这次修改说明"
+```
+
+`sync` 用来拉取最新版本；`push-code` 会自动提交当前代码、推送工作分支，并创建 GitHub Pull Request。
+
 请先阅读完整流程：[docs/git-collaboration.md](docs/git-collaboration.md)。
 
 最短工作流：
