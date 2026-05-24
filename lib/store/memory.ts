@@ -12,6 +12,7 @@ export type BaziProfileRecord = {
   userId: string;
   input: BaziInput;
   chart: BaziChart;
+  fateSummary?: string;
   report?: InterpretationReport;
   createdAt: string;
   deletedAt?: string;

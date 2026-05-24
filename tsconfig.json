@@ -19,5 +19,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "node_modules 2", "node_modules.broken-*", "node_modules.dataless-*", "node_modules.desktop-dataless-*", "易经程序源码-*", ".next"]
 }

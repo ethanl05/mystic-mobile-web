@@ -26,6 +26,12 @@ export function PageBackButton() {
       return;
     }
 
+    if (pathname.startsWith("/me/archive")) {
+      const from = new URLSearchParams(window.location.search).get("from");
+      router.push(from === "bazi" || from === "yijing" ? `/me?archive=${from}` : "/me");
+      return;
+    }
+
     router.push("/");
   }
 

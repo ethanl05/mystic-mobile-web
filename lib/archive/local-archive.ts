@@ -1,6 +1,6 @@
 "use client";
 
-import type { BaziChart } from "@/features/bazi/engine/types";
+import type { BaziChart, BaziInput } from "@/features/bazi/engine/types";
 import type { YijingResult } from "@/features/yijing/engine/types";
 import type { InterpretationReport } from "@/lib/ai/schemas";
 
@@ -18,7 +18,9 @@ export type ArchiveItem = {
   payload: {
     chart?: BaziChart;
     yijingResult?: YijingResult;
-    report: InterpretationReport;
+    fateSummary?: string;
+    report?: InterpretationReport;
+    input?: BaziInput;
   };
 };
 

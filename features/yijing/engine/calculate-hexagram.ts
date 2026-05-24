@@ -1,4 +1,5 @@
 import { getHexagram } from "./hexagrams";
+import { getLineAuspice } from "./line-auspices";
 import {
   normalizeMovingLine,
   normalizeTrigramNumber,
@@ -27,6 +28,7 @@ export function calculateHexagram(input: YijingInput): YijingResult {
   const movingLine = normalizeMovingLine(input.numbers[2]);
   const upperTrigram = TRIGRAM_BY_NUMBER[upperNumber];
   const lowerTrigram = TRIGRAM_BY_NUMBER[lowerNumber];
+  const primaryKey = `${upperTrigram}-${lowerTrigram}`;
   const primary = getHexagram(upperTrigram, lowerTrigram);
 
   const lines = [...TRIGRAM_LINES[lowerTrigram], ...TRIGRAM_LINES[upperTrigram]] as [
@@ -59,6 +61,7 @@ export function calculateHexagram(input: YijingInput): YijingResult {
     mutualSymbol: mutual.symbol,
     judgement: primary.judgement,
     lineText: primary.lines[movingLine - 1],
+    lineAuspice: getLineAuspice(primaryKey, movingLine),
     analysis: primary.analysis,
     classicalNote: primary.classicalNote,
     lineAnalysis: primary.lineAnalyses[movingLine - 1],

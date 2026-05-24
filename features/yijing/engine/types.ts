@@ -14,6 +14,12 @@ export type HexagramText = {
   lineAnalyses: [string, string, string, string, string, string];
 };
 
+export type LineAuspice = {
+  main: "吉" | "凶" | "无咎";
+  classicalLabel: string;
+  hint?: string;
+};
+
 export type YijingResult = {
   upperTrigram: TrigramName;
   lowerTrigram: TrigramName;
@@ -26,6 +32,7 @@ export type YijingResult = {
   mutualSymbol: string;
   judgement: string;
   lineText: string;
+  lineAuspice: LineAuspice;
   analysis: string;
   classicalNote: string;
   lineAnalysis: string;

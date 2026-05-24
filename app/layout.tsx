@@ -4,7 +4,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { PageBackButton } from "@/components/page-back-button";
 
 export const metadata: Metadata = {
-  title: "玄枢",
+  title: "玄问",
   description: "传统文化视角下的八字排盘与易经数字卦"
 };
 
