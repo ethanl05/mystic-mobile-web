@@ -7,8 +7,8 @@ Usage:
   npm run sync
 
 What it does:
-  Fetches the latest main branch and updates your current branch.
-  If you have local changes, it stashes them first and reapplies them after sync.
+  Switches to main, fetches the latest origin/main, and fast-forwards main.
+  If you have local changes, it stashes them first and reapplies them on main.
 EOF
 }
 
@@ -35,8 +35,8 @@ need_cmd git
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
-branch="$(git branch --show-current)"
-if [[ -z "$branch" ]]; then
+current_branch="$(git branch --show-current)"
+if [[ -z "$current_branch" ]]; then
   echo "You are not on a branch. Please switch to a branch first." >&2
   exit 1
 fi
@@ -56,23 +56,29 @@ fi
 echo "Fetching latest main..."
 git fetch origin main
 
-if [[ "$branch" == "main" ]]; then
-  echo "Updating main..."
-  git merge --ff-only origin/main
+if [[ "$current_branch" != "main" ]]; then
+  echo "Switching from $current_branch to main..."
+  if git show-ref --verify --quiet refs/heads/main; then
+    git switch main
+  else
+    git switch -c main --track origin/main
+  fi
 else
-  echo "Updating $branch on top of origin/main..."
-  git rebase origin/main
+  echo "Already on main."
 fi
+
+echo "Updating main..."
+git merge --ff-only origin/main
 
 if [[ -n "$stash_name" ]]; then
   echo "Reapplying your local changes..."
   if ! git stash pop; then
     echo
     echo "Your latest code was synced, but the stashed changes need conflict resolution." >&2
-    echo "After resolving files, run: git add <file> && git rebase --continue, if rebase is active." >&2
+    echo "After resolving files, ask Codex to help finish the conflict resolution." >&2
     exit 1
   fi
 fi
 
 echo
-echo "Done. $branch is synced with origin/main."
+echo "Done. main is synced with origin/main."

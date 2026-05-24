@@ -2,6 +2,16 @@
 
 This repository supports one-sentence Git collaboration commands for the user and their collaborator.
 
+## Collaboration Model
+
+Use a single shared branch: `main`.
+
+Do not create work branches or Pull Requests for the normal collaboration flow. The user wants Codex to keep the workflow command-only:
+
+- pull the latest `main`
+- commit the current local code
+- push directly to `origin/main`
+
 ## Direct Collaboration Commands
 
 When the user asks any of these in Chinese or English:
@@ -29,13 +39,13 @@ When the user asks any of these:
 - `push code: <description>`
 - `publish code: <description>`
 
-Do not ask them to run terminal commands. Use the description after the colon as the commit/PR title. If there is no description, infer a short title from the current diff. Then run:
+Do not ask them to run terminal commands. Use the description after the colon as the commit title. If there is no description, infer a short title from the current diff. Then run:
 
 ```bash
 npm run push-code -- "<title>"
 ```
 
-This command creates a work branch when needed, commits current code, pushes it, and opens a GitHub Pull Request.
+This command switches to `main` when needed, updates from `origin/main`, commits current code, and pushes directly to `origin/main`.
 
 ## Safety Rules
 
@@ -43,7 +53,7 @@ This command creates a work branch when needed, commits current code, pushes it,
 - Never commit `.env`, secrets, keys, or local credential files.
 - If GitHub CLI is not authenticated, handle the login flow for the user and show the browser/device-code step when needed.
 - If a command fails because of stale Git lock files from a crashed process, verify no active Git write process is running before removing the stale lock.
-- After publishing, report the branch, commit, PR URL, and GitHub Actions status when available.
+- After publishing, report the branch, commit, push result, and GitHub Actions status when available.
 
 ## User-Facing Phrase
 

@@ -7,8 +7,7 @@ Usage:
   npm run push-code -- "short description of your change"
 
 What it does:
-  Stages your current code, commits it, pushes a work branch, and opens a GitHub PR.
-  If you are on main, it creates a new work branch automatically.
+  Switches to main when needed, stages your current code, commits it, and pushes directly to origin/main.
 EOF
 }
 
@@ -31,18 +30,6 @@ need_cmd() {
   fi
 }
 
-make_slug() {
-  local slug
-  slug="$(printf '%s' "$1" |
-    tr '[:upper:]' '[:lower:]' |
-    sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/-+/-/g' |
-    cut -c 1-48)"
-  if [[ -z "$slug" ]]; then
-    slug="change"
-  fi
-  printf '%s' "$slug"
-}
-
 is_sensitive_path() {
   local path="$1"
   case "$path" in
@@ -56,6 +43,71 @@ is_sensitive_path() {
       ;;
   esac
   return 1
+}
+
+is_dirty() {
+  ! git diff --quiet ||
+    ! git diff --cached --quiet ||
+    [[ -n "$(git ls-files --others --exclude-standard)" ]]
+}
+
+ensure_on_updated_main() {
+  local current_branch stash_name
+  current_branch="$(git branch --show-current)"
+  if [[ -z "$current_branch" ]]; then
+    echo "You are not on a branch. Please switch to a branch first." >&2
+    exit 1
+  fi
+
+  echo "Fetching latest main..."
+  git fetch origin main
+
+  if [[ "$current_branch" != "main" ]]; then
+    stash_name=""
+    if is_dirty; then
+      stash_name="collab-push move-to-main $(date '+%Y-%m-%d %H:%M:%S')"
+      echo "Local changes found on $current_branch. Moving them to main..."
+      git stash push -u -m "$stash_name" >/dev/null
+    fi
+
+    if git show-ref --verify --quiet refs/heads/main; then
+      git switch main
+    else
+      git switch -c main --track origin/main
+    fi
+
+    git merge --ff-only origin/main
+
+    if [[ -n "$stash_name" ]]; then
+      echo "Reapplying your local changes on main..."
+      if ! git stash pop; then
+        echo "Your changes are on main but need conflict resolution before publishing." >&2
+        exit 1
+      fi
+    fi
+    return
+  fi
+
+  if ! git merge-base --is-ancestor origin/main HEAD; then
+    stash_name=""
+    if is_dirty; then
+      stash_name="collab-push auto-stash $(date '+%Y-%m-%d %H:%M:%S')"
+      echo "Local changes found. Stashing them before updating main..."
+      git stash push -u -m "$stash_name" >/dev/null
+    fi
+
+    git merge --ff-only origin/main
+
+    if [[ -n "$stash_name" ]]; then
+      echo "Reapplying your local changes..."
+      if ! git stash pop; then
+        echo "main was updated, but your changes need conflict resolution before publishing." >&2
+        exit 1
+      fi
+    fi
+  else
+    echo "main already contains origin/main."
+  fi
 }
 
 need_cmd git
@@ -75,20 +127,7 @@ if ! git remote get-url origin >/dev/null 2>&1; then
   exit 1
 fi
 
-branch="$(git branch --show-current)"
-if [[ -z "$branch" ]]; then
-  echo "You are not on a branch. Please switch to a branch first." >&2
-  exit 1
-fi
-
-if [[ "$branch" == "main" || "$branch" == "master" ]]; then
-  slug="$(make_slug "$message")"
-  branch="work/$(date '+%Y%m%d-%H%M')-$slug"
-  echo "Creating work branch: $branch"
-  git fetch origin main
-  git merge --ff-only origin/main
-  git switch -c "$branch"
-fi
+ensure_on_updated_main
 
 echo "Staging current code..."
 git add -A
@@ -116,32 +155,18 @@ if [[ "${#blocked_paths[@]}" -gt 0 ]]; then
   exit 1
 fi
 
+secret_pattern='sk-[A-Za-z0-9]{16,}|AI_API''_KEY=[^[:space:]]+|PRIVATE'' KEY|CLIENT''_SECRET|ACCESS''_TOKEN|DATABASE''_URL=postgresql://[^[:space:]]+@'
+if git diff --cached --no-ext-diff | grep -E "$secret_pattern" >/dev/null; then
+  echo "Refusing to commit because the staged diff appears to contain a secret or credential." >&2
+  echo "Remove the secret from code and keep it in .env.local or GitHub/Vercel environment variables." >&2
+  exit 1
+fi
+
 echo "Committing..."
 git commit -m "$message"
 
-echo "Pushing $branch..."
-git push -u origin "$branch"
-
-existing_pr="$(gh pr view --head "$branch" --json url -q .url 2>/dev/null || true)"
-if [[ -n "$existing_pr" ]]; then
-  echo
-  echo "PR already exists: $existing_pr"
-  exit 0
-fi
-
-echo "Opening GitHub PR..."
-pr_url="$(gh pr create \
-  --base main \
-  --head "$branch" \
-  --title "$message" \
-  --body "## 这次改了什么
-
-- $message
-
-## 验证方式
-
-- GitHub Actions 会自动运行 test。
-")"
+echo "Pushing main..."
+git push origin main
 
 echo
-echo "Done. PR: $pr_url"
+echo "Done. main was pushed to origin/main."
