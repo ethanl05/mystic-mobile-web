@@ -62,11 +62,15 @@ export default function RecordsPage() {
     <div className="space-y-4">
       <section className="relative overflow-hidden rounded-xl border border-[#ddd2c0] bg-gradient-to-br from-[#fffdfa] to-[#faf4e8] p-4 shadow-[0_12px_36px_rgba(75,48,27,0.05)]">
         <div className="pointer-events-none absolute right-[-2.5rem] top-[-2.5rem] h-28 w-28 rounded-full border border-[#dcc8a6] opacity-70" />
-        <div className="pointer-events-none absolute bottom-4 right-5 grid gap-1 opacity-20">
-          <span className="h-1 w-12 rounded bg-[#201b16]" />
-          <span className="h-1 w-12 rounded bg-[#201b16]" />
-          <span className="h-1 w-12 rounded bg-[#201b16]" />
-        </div>
+        <svg className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-6 h-14 w-14 text-[#201b16] opacity-15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          {/* 古典线装书/账册写意设计 */}
+          <path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
+          <line x1="8" y1="3" x2="8" y2="21" />
+          <line x1="12" y1="8" x2="16" y2="8" />
+          <line x1="12" y1="12" x2="16" y2="12" />
+          <line x1="12" y1="16" x2="16" y2="16" />
+          <path d="M4 6h4M4 12h4M4 18h4" />
+        </svg>
         <div className="relative">
           <p className="text-xs font-black text-[#8f2f24] tracking-wide">最近记录</p>
           <h1 className="mt-2 text-3xl font-black leading-tight text-[#201b16]">记录</h1>
@@ -96,30 +100,57 @@ export default function RecordsPage() {
   );
 }
 
-function RecordCategoryCard({ label, value, action, tone, onClick }: { label: string; value: number; action: string; tone: "red" | "green"; onClick: () => void }) {
+function RecordCategoryCard({
+  label,
+  value,
+  action,
+  tone,
+  onClick
+}: {
+  label: string;
+  value: number;
+  action: string;
+  tone: "red" | "green";
+  onClick: () => void;
+}) {
   const color = tone === "red" ? "text-[#8f2f24]" : "text-[#1f5d57]";
-  const softBg = tone === "red" ? "bg-[#fff8eb]" : "bg-[#edf7f4]";
-  const ring = tone === "red" ? "border-[#d7c3a3]" : "border-[#bfd8cf]";
-  const actionTone = tone === "red"
-    ? "border-[#8f2f24] bg-[#8f2f24] text-white shadow-[0_10px_24px_rgba(143,47,36,0.22)]"
-    : "border-[#1f5d57] bg-[#1f5d57] text-white shadow-[0_10px_24px_rgba(31,93,87,0.2)]";
+  const actionTone = "border-[1.5px] border-[#b88a3b] bg-[#f5ebd6] text-[#5c4a37] shadow-[0_2px_8px_rgba(184,138,59,0.06)]";
   const mark = tone === "red" ? "四柱" : "六爻";
+  const watermarkChar = tone === "red" ? "命" : "卦";
+
   return (
-    <button className="panel relative min-h-[132px] w-full overflow-hidden p-5 text-left transition active:scale-[0.99]" onClick={onClick}>
-      <div className="pointer-events-none absolute right-[-1.75rem] top-[-1.75rem] h-24 w-24 rounded-full border border-[#eadfce]" />
+    <button
+      className="panel relative min-h-[132px] w-full overflow-hidden p-5 text-left transition active:scale-[0.99] !border-[#c9ad83] bg-gradient-to-br from-[#fffdf9] to-[#faf4e6] shadow-[inset_0_0_0_1px_rgba(184,138,59,0.06),0_12px_36px_rgba(75,48,27,0.05)] cursor-pointer"
+      onClick={onClick}
+    >
+      {/* Inner double border decoration */}
+      <div className="pointer-events-none absolute inset-1 rounded-[10px] border border-[#c9ad83]/30" aria-hidden="true" />
+      
+      {/* Decorative Watermark */}
+      <div 
+        className="pointer-events-none absolute right-[-1.5rem] top-[-1.5rem] select-none text-[8.5rem] font-normal leading-none text-[#b88a3b]/[0.14]" 
+        style={{ fontFamily: '"STXingkai", "Xingkai SC", "华文行楷", "Kaiti SC", "STKaiti", serif' }}
+        aria-hidden="true"
+      >
+        {watermarkChar}
+      </div>
+
+      <div className="pointer-events-none absolute right-[-1.75rem] top-[-1.75rem] h-24 w-24 rounded-full border border-[#eadfce]/50" />
+      
       <div className="relative flex items-start justify-between gap-4">
         <div className="min-w-0 pt-1">
           <span className={`text-xs font-black ${color}`}>{mark}</span>
           <h2 className="mt-1 text-2xl font-black leading-tight text-[#201b16]">{label}</h2>
-        </div>
-        <div className={`flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded border ${ring} ${softBg}`}>
-          <span className={`text-2xl font-black leading-none ${color}`}>{value}</span>
-          <span className="mt-1 text-xs font-black text-[#756a5d]">条</span>
+          <p className="mt-2 text-sm font-bold leading-5 text-[#756a5d]">{value} 条记录</p>
         </div>
       </div>
-      <div className={`relative mt-5 flex min-h-12 items-center justify-between rounded border px-4 text-base font-black ${actionTone}`}>
-        <span className="truncate">{action}</span>
-        <span className="text-2xl leading-none">›</span>
+
+      <div className={`relative mt-5 flex min-h-12 items-center justify-between rounded-lg px-4 text-base font-black transition-all active:scale-[0.98] ${actionTone} overflow-hidden`}>
+        {/* Inner thin red border to echo the primary red theme */}
+        <div className="pointer-events-none absolute inset-0.5 rounded-[6px] border border-[#8f2f24]/30" aria-hidden="true" />
+
+        <span className="relative z-10 truncate">{action}</span>
+        <span className="relative z-10 text-2xl leading-none text-[#b88a3b]">›</span>
       </div>
     </button>
   );

@@ -105,8 +105,8 @@ export default function MePage() {
     <div className="space-y-4">
       <section className="flex items-center gap-3 px-1 pb-2 pt-3">
         <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#ddd2c0] bg-[#f4efe6] shadow-[0_10px_28px_rgba(75,48,27,0.08)]" aria-hidden="true">
-          <svg className="h-9 w-9 text-[#9f988e]" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm2 8.5v2.5a6.01 6.01 0 0 1 5 5.92v1.08H5v-1.08a6.01 6.01 0 0 1 5-5.92v-2.5h4z" />
+          <svg className="h-12 w-12 text-[#9f988e]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 9c-2.33 0-7 2.33-7 7v4h14v-4c0-4.67-4.67-7-7-7z" />
           </svg>
         </div>
         <div className="min-w-0">
@@ -144,10 +144,10 @@ export default function MePage() {
           <p className="relative mb-3 text-xs font-bold text-[#756a5d] tracking-wider">购买权益</p>
           <div className="relative grid gap-3">
             <button className="w-full min-h-[46px] rounded-lg bg-[#8f2f24] hover:bg-[#a63d32] border border-[#721f16] text-[#fffcf7] font-black text-sm shadow-[0_4px_12px_rgba(143,47,36,0.16)] transition active:scale-[0.985] cursor-pointer" onClick={() => buy("bazi_30d")}>
-              八字会员 30 天 · ¥19.9
+              八字会员 30 天 ￥19.9
             </button>
             <button className="w-full min-h-[46px] rounded-lg bg-[#1f5d57] hover:bg-[#2b756d] border border-[#14443f] text-[#fffcf7] font-black text-sm shadow-[0_4px_12px_rgba(31,93,87,0.16)] transition active:scale-[0.985] cursor-pointer" onClick={() => buy("yijing_3")}>
-              易经解读 3 次 · ¥9.9
+              易经解读 3 次 ￥9.9
             </button>
           </div>
         </div>
@@ -243,9 +243,7 @@ function ArchiveCategoryCard({ label, value, action, tone, href }: { label: stri
   
   const cardStyle = "border-[#c9ad83] bg-gradient-to-br from-[#fffdf9] to-[#faf4e6]";
     
-  const actionStyle = isRed
-    ? "border-[#8f2f24] bg-[#8f2f24] text-white shadow-[0_6px_16px_rgba(143,47,36,0.18)]"
-    : "border-[#1f5d57] bg-[#1f5d57] text-white shadow-[0_6px_16px_rgba(31,93,87,0.18)]";
+  const actionStyle = "border-[1.5px] border-[#b88a3b] bg-[#f5ebd6] text-[#5c4a37] shadow-[0_2px_8px_rgba(184,138,59,0.06)]";
     
   const mark = isRed ? "命盘" : "卦例";
   const watermarkChar = isRed ? "命" : "卦";
@@ -254,7 +252,10 @@ function ArchiveCategoryCard({ label, value, action, tone, href }: { label: stri
   return (
     <a className={`relative block min-h-[132px] w-full overflow-hidden rounded border p-5 text-left shadow-[0_10px_24px_rgba(75,48,27,0.03)] transition active:scale-[0.99] ${cardStyle}`} href={href}>
       {/* Decorative Watermark */}
-      <div className={`absolute right-5 top-2 text-[4.5rem] font-black leading-none pointer-events-none select-none ${watermarkColor}`}>
+      <div 
+        className="absolute right-[-1.5rem] top-[-1.5rem] text-[8.5rem] font-normal leading-none pointer-events-none select-none text-[#b88a3b]/[0.14]"
+        style={{ fontFamily: '"STXingkai", "Xingkai SC", "华文行楷", "Kaiti SC", "STKaiti", serif' }}
+      >
         {watermarkChar}
       </div>
       <div className="pointer-events-none absolute right-[-1.75rem] top-[-1.75rem] h-24 w-24 rounded-full border border-[#eadfce]/30" />
@@ -265,9 +266,12 @@ function ArchiveCategoryCard({ label, value, action, tone, href }: { label: stri
           <p className="mt-2 text-sm font-bold leading-5 text-[#756a5d]">{value} 条记录</p>
         </div>
       </div>
-      <div className={`relative mt-5 flex min-h-12 items-center justify-between rounded border px-4 text-base font-black ${actionStyle}`}>
-        <span className="truncate">{action}</span>
-        <span className="text-2xl leading-none">›</span>
+      <div className={`relative mt-5 flex min-h-12 items-center justify-between rounded-lg px-4 text-base font-black transition-all active:scale-[0.98] ${actionStyle} overflow-hidden`}>
+        {/* Inner thin red border to echo the primary red theme */}
+        <div className="pointer-events-none absolute inset-0.5 rounded-[6px] border border-[#8f2f24]/30" aria-hidden="true" />
+
+        <span className="relative z-10 truncate">{action}</span>
+        <span className="relative z-10 text-2xl leading-none text-[#b88a3b]">›</span>
       </div>
     </a>
   );

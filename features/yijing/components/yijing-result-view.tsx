@@ -135,8 +135,6 @@ export function YijingSnapshotView({ result, report }: { result: YijingResult; r
   return (
     <div className="space-y-4">
       <section className="panel p-5 text-center relative overflow-hidden">
-        {/* Subtle background bagua lines representation */}
-        <div className="absolute left-[-2rem] top-[-2rem] text-[6rem] font-bold text-[#1f5d57]/3 select-none pointer-events-none">卦</div>
         <div className="text-6xl text-[#1f5d57] relative z-10">{result.primarySymbol}</div>
         <h1 className="mt-2 text-3xl font-black text-[#201b16] relative z-10">{result.primaryHexagram}</h1>
         <p className="mt-2 text-xs font-bold text-[#756a5d] relative z-10">上卦 {result.upperTrigram} · 下卦 {result.lowerTrigram} · 动爻 {result.movingLine}爻</p>
@@ -185,7 +183,6 @@ export function YijingSnapshotView({ result, report }: { result: YijingResult; r
           <div className="mt-3 space-y-3 text-sm leading-7 text-[#3a3028]">
             <p className="font-medium px-1">{result.analysis}</p>
             <p className="rounded-lg border border-[#eadfce] bg-[#fffbf2] p-3 shadow-inner relative overflow-hidden">
-              <span className="absolute right-2 bottom-1 text-[2rem] font-bold text-[#1f5d57]/3 select-none pointer-events-none">爻</span>
               <strong className="text-[#1f5d57]">动爻提示：</strong>{result.lineAnalysis}
             </p>
           </div>
@@ -200,7 +197,6 @@ function LineAuspiceCard({ result }: { result: YijingResult }) {
   return (
     <section className="panel overflow-hidden p-0 text-center">
       <div className="border-b border-[#eadfce] bg-[#fffbf2] p-4 relative">
-        <div className="absolute right-2 bottom-1 text-[2.5rem] font-bold text-[#8f2f24]/3 select-none pointer-events-none">吉</div>
         <div className="text-xs font-black text-[#8f2f24] relative z-10">动爻断语</div>
         <div className="mt-2 text-5xl font-black leading-none text-[#7f1d1d] relative z-10">{result.lineAuspice.main}</div>
         <p className="mt-3 text-sm font-bold leading-6 text-[#5f5143] relative z-10">原典断辞：{result.lineAuspice.classicalLabel}</p>
@@ -235,7 +231,6 @@ function Report({ report }: { report: InterpretationReport }) {
 
         {report.actionSuggestions.length ? (
           <div className="rounded-lg border border-[#d7c3a3] bg-[#fffbf2] p-4 shadow-sm relative overflow-hidden">
-            <div className="absolute right-2 bottom-1 text-[2.5rem] font-bold text-[#1f5d57]/3 select-none pointer-events-none">镜</div>
             <h3 className="font-black text-[#201b16] relative z-10">观察提醒</h3>
             <p className="mt-1 text-xs leading-5 text-[#756a5d] font-bold relative z-10">把卦象当作观察问题的角度，而不是替你做决定的答案。</p>
             <div className="mt-3 space-y-2 relative z-10">

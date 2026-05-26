@@ -87,7 +87,9 @@ function HomeEntryCard({
   visual: ReactNode;
 }) {
   return (
-    <a href={href} className={`home-entry-card home-entry-card-${variant} panel group relative block min-h-[12.8rem] overflow-hidden p-5`}>
+    <a href={href} className={`home-entry-card home-entry-card-${variant} panel group relative block min-h-[12.8rem] overflow-hidden p-5 !border-[#c9ad83] shadow-[inset_0_0_0_1px_rgba(184,138,59,0.06),0_12px_36px_rgba(75,48,27,0.05)]`}>
+      {/* Inner double border decoration to match "My" page style */}
+      <div className="pointer-events-none absolute inset-1 rounded-[10px] border border-[#c9ad83]/30" aria-hidden="true" />
       <div className="home-card-orbit" aria-hidden="true" />
       <div className="relative flex h-full min-h-[10rem] items-start justify-between gap-4">
         <div className="min-w-0">

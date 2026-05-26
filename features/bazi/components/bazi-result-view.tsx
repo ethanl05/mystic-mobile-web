@@ -185,7 +185,6 @@ function ArchiveSavePanel({ report, archiveMessage, onArchive }: { report: Inter
   return (
     <section className="rounded-lg border border-[#d7b7a0] bg-[#fff8eb] p-3 shadow-[0_12px_32px_rgba(75,48,27,0.06)]">
       <button className="button-primary w-full text-base" onClick={onArchive}>一键存档</button>
-      <p className="mt-2 text-center text-xs font-bold leading-5 text-[#756a5d]">{report ? "将命盘、结构摘要 and AI 解读一起保存。" : "先保存完整命盘，之后生成 AI 解读可再次更新存档。"}</p>
       {archiveMessage ? <p className="mt-2 rounded border border-[#eadfce] bg-[#fffdf8] p-2 text-center text-xs font-bold text-[#1f5d57] shadow-sm">{archiveMessage}</p> : null}
     </section>
   );
@@ -261,7 +260,6 @@ function elementPattern(chart: BaziChart): string {
 function FateSummary({ summary }: { summary: string }) {
   return (
     <div className="mb-4 rounded-lg border border-[#d7b7a0] bg-[#fffbf2] px-3 py-4 text-center shadow-inner relative overflow-hidden">
-      <div className="absolute right-2 bottom-1 text-[2.5rem] font-bold text-[#8f2f24]/3 select-none pointer-events-none">命</div>
       <p className="text-xl font-black leading-8 text-[#201b16] relative z-10">{summary}</p>
     </div>
   );
@@ -513,7 +511,6 @@ function Report({ report }: { report: InterpretationReport }) {
 
         {report.actionSuggestions.length ? (
           <div className="rounded-lg border border-[#d7c3a3] bg-[#fffbf2] p-4 shadow-sm relative overflow-hidden">
-            <div className="absolute right-2 bottom-1 text-[2.5rem] font-bold text-[#8f2f24]/3 select-none pointer-events-none">印</div>
             <h3 className="font-black text-[#201b16] relative z-10">五行生活灵感</h3>
             <p className="mt-1 text-xs leading-5 text-[#756a5d] font-bold relative z-10">偏娱乐参考，可看看颜色、方位、城市气质、工作类型、运动和饰品灵感。</p>
             <div className="mt-3 space-y-2 relative z-10">
